@@ -1,0 +1,21 @@
+.navbar{
+    background-color: rgb(48, 46, 46);
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 8px 8px 5px 3px rgba(0, 0, 0, 0.2);
+}
+.container{
+    padding-top: 5px;
+    display: flex;
+    
+}
+.dropdown{
+    border-radius: 10px;
+    margin-right: 20px;
+    box-shadow: 2px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.logo{
+    display: flex;
+    justify-content: flex-start;
+    width: 50px;
+}

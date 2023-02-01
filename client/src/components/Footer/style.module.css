@@ -1,0 +1,12 @@
+.footer{
+    margin-top: 2%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    
+    
+}
+.img{
+    
+    height: 100px;
+}
