@@ -27,7 +27,7 @@ module.exports={
             })
             console.log(infoMail)
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
         
         
@@ -48,7 +48,7 @@ module.exports={
             })
             console.log(infoMail)
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
         
         

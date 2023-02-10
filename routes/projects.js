@@ -17,7 +17,7 @@ router
 router
     .route("/:id")
         .get(detail)
-        .post(update)
+        .put(update)
         .delete(remove)
 router
     .post("/colaborator/add", addColaborator)

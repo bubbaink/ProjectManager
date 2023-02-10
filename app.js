@@ -6,7 +6,8 @@ const connectDB = require("./database/config")
 
 const app = express();
 
-const cors = require("cors")
+const cors = require("cors");
+const checkToken = require("./middlewares/checkToken");
 const whiteList = [process.env.URL_FRONT]
 const corsOptions ={
   origin : function(origin,cb){
@@ -23,7 +24,7 @@ connectDB()
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false })); 
-app.use(cors(corsOptions))
+app.use(cors())
 
 
 
@@ -31,7 +32,7 @@ app.use(cors(corsOptions))
 app
   .use("/api/auth", require("./routes/auth"))
   .use("/api/users", require("./routes/users"))
-  .use("/api/projects", require("./routes/projects"))
+  .use("/api/projects",checkToken, require("./routes/projects"))
   .use("/api/tasks", require("./routes/tasks"))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,3 +1,9 @@
+import { Col } from "react-bootstrap"
+
 export const Alerts =({msg})=>{
-    <p>{msg}</p>
+    <Col>
+    <p>
+        {msg}
+    </p>
+    </Col>
 }

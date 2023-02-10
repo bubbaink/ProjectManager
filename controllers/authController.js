@@ -1,4 +1,4 @@
-const createError = require("http-errors");
+const createHttpError = require("http-errors");
 const errorReponse = require("../helpers/errorReponse");
 const User = require("../database/models/User");
 const generateToken = require("../helpers/generateToken");
@@ -13,7 +13,7 @@ module.exports = {
             const {name, surname, email, password} = req.body;
 
             if([name,surname,email,password].includes("")){
-                throw createError(400, "Todos los campos son obligatorios"); 
+                throw createHttpError(400, "Todos los campos son obligatorios"); 
             }
 
             let user = await User.findOne({
@@ -21,7 +21,7 @@ module.exports = {
             })
 
             if(user){
-                throw createError(400, "el email ya existe"); 
+                throw createHttpError(400, "el email ya existe"); 
             }
 
             const token = generateToken()
@@ -56,38 +56,36 @@ module.exports = {
         try {
 
             if([email,password].includes("")){
-                throw createError(400, "Todos los campos son obligatorios"); 
+                throw createHttpError(400, "Todos los campos son obligatorios"); 
             }
 
             let user = await User.findOne({
                 email
-            }/* , (error, user)=>{
-                if(error) return handleError(error)
-            } */)
+            })
 
             if(!user){
-                throw createError(403, "credenciales invalidas | email"); 
+                throw createHttpError(403, "credenciales invalidas | email"); 
             }
 
-            if(!user.cheked){
-                throw createError(403, "cuenta no habilitada"); 
+            if(!user.checked){
+                throw createHttpError(403, "cuenta no habilitada"); 
             }
 
             if(!await user.chekedPassword(password)){
-                throw createError(403, "cuenta no habilitada | password"); 
+                throw createHttpError(403, "cuenta no habilitada | password"); 
             }
 
             return res.status(200).json({
                 ok: true,
                 msg: "usuario logueado",
-                user: {
-                    nombre : user.name,
-                    surname : user.surname,
-                    email: user.email,
-                    token: generateJsonWebToken({
-                        id : user._id
-                    })
-                }
+                user : {
+                    name : user.name,
+                    _id : user._id,
+                },
+                token : generateJsonWebToken({
+                    id: user._id
+                })
+
             })
         } catch (error) {
             return errorReponse(res, error, "LOGIN")
@@ -100,16 +98,12 @@ module.exports = {
         try {
 
             if(!token){
-                throw createError(400, "token inexistente"); 
+                throw createHttpError(400, "token inexistente"); 
             }
 
             const user = await User.findOne({
                 token
             })
-
-            if(!user){
-                throw createError(400, "token invalido"); 
-            }
 
             user.checked = true;
             user.token = "";
@@ -133,7 +127,7 @@ module.exports = {
                 email
             });
 
-            if(!user)throw createError(400, "email incorrecto")
+            if(!user)throw createHttpError(400, "email incorrecto")
             
 
             const token = generateToken()
@@ -156,16 +150,17 @@ module.exports = {
     },
     verifyToken : async (req, res)=> {
         try {
-
             const {token}=req.query
-            if(!user){
-                throw createError(400,"no hay peticion")
-            }
             const user= await User.findOne({
                 token
             })
+            if(!user) throw createHttpError(400,"no hay peticion")
+            
+            /* const user= await User.findOne({
+                token
+            }) */
             if(!user){
-                throw createError(400,"token invalido")
+                throw createHttpError(400,"token invalido")
             }
 
             return res.status(200).json({
@@ -183,12 +178,13 @@ module.exports = {
             const {password}=req.body;
 
             if(!password){
-                throw createError(400,"password es obligatorio")
+                throw createHttpError(400,"password es obligatorio")
             }
             const user= await User.findOne({
                 token
             })
-
+            if(!user) throw createHttpError(400,"no hay peticion")
+            
             user.password = password
             user.token = ""
             await user.save()

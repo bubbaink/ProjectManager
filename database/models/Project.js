@@ -15,7 +15,7 @@ const projectSchema = new mongoose.Schema({
     },
     dateExpire:{
         type: Date,
-        default: Data.now()
+        default: Date.now()
     },
     client:{
         type: String,
